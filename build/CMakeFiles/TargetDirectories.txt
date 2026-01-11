@@ -1,0 +1,10 @@
+/home/chez/development/cpp-build-system/build/CMakeFiles/edit_cache.dir
+/home/chez/development/cpp-build-system/build/CMakeFiles/rebuild_cache.dir
+/home/chez/development/cpp-build-system/build/cli/CMakeFiles/cbs.dir
+/home/chez/development/cpp-build-system/build/cli/CMakeFiles/edit_cache.dir
+/home/chez/development/cpp-build-system/build/cli/CMakeFiles/rebuild_cache.dir
+/home/chez/development/cpp-build-system/build/cli/commands/CMakeFiles/edit_cache.dir
+/home/chez/development/cpp-build-system/build/cli/commands/CMakeFiles/rebuild_cache.dir
+/home/chez/development/cpp-build-system/build/cli/commands/build/CMakeFiles/build.dir
+/home/chez/development/cpp-build-system/build/cli/commands/build/CMakeFiles/edit_cache.dir
+/home/chez/development/cpp-build-system/build/cli/commands/build/CMakeFiles/rebuild_cache.dir

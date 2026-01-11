@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/cbs.dir/main.cpp.o -o cbs  commands/build/libbuild.a 
