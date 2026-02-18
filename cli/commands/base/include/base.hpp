@@ -1,32 +1,19 @@
 #ifndef BASE_HPP
 #define BASE_HPP
 
-namespace cli
+namespace cli::commands
 {
 
-namespace commands
-{
-
-template <typename Derived>
-class Base
-{
-public:
-  Base() = default;
-
-  void execute(void)
+  template <typename Derived, typename Options>
+  class Base
   {
-    static_cast<Derived*>(this)->executeImpl();
-  }
+  public:
+    void execute(const Options& options);
+  };
 
-  void printHelp(void)
-  {
-    static_cast<Derived*>(this)->printHelp();
-  }
-}; // class Base
+} // namespace cli::commands
 
-} // namespace commands
-
-} // namespace cli
+#include "base.tpp"
 
 #endif // BASE_HPP
 
