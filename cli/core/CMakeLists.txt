@@ -1,11 +1,11 @@
-add_library(cli-core STATIC)
+add_library(cli-core INTERFACE)
 
-target_sources(cli-core
-  PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/
-)
+# target_sources(cli-core
+#   PRIVATE
+#     ${CMAKE_CURRENT_SOURCE_DIR}/src/
+# )
 
 target_include_directories(cli-core
-  PUBLIC
+  INTERFACE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )

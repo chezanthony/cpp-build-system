@@ -1,22 +1,40 @@
-#include "base.hpp"
+#ifndef BASE_TPP
+#define BASE_TPP
 
-namespace cli
+#include "types.hpp"
+#include <iostream>
+
+namespace cli::commands
 {
 
-namespace commands
-{
+  template<typename Derived, typename Options>
+  void Base<Derived, Options>::execute(const Options& options)
+  {
+    cli::core::ReturnType<void> result = static_cast<Derived*>(this)->executeImpl(options);
 
-Base::execute(void)
-{
-  static_cast<Derived*>(this)->executeImpl();
-}
+    using ErrorType = cli::core::ErrorType;
+    using ErrorCodes = cli::core::ErrorCodes;
 
-Base::printHelp(void)
-{
-  static_cast<Derived*>(this)->helpImpl();
-}
+    if (!result.has_value())
+    {
+      std::cout << "Error: ";
 
-} // namespace commands
+      switch (result.error().errorCode)
+      {
+      case ErrorCodes::FileExists:
+        std::cout << "File exists: ";
+        break;
+      case ErrorCodes::FailedToCreateFile:
+        std::cout << "Failed to create file: ";
+      default:
+        std::cout << "Unknown: ";
+      }
 
-} // namespace cli
+      std::cout << result.error().message << "\n";
+    }
+  }
+  
+} // namespace cli::commands
+
+#endif // !BASE_TPP
 

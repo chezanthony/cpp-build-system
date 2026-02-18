@@ -3,32 +3,28 @@
 
 #include <CLI/CLI.hpp>
 
-namespace cli
+namespace cli::utils
 {
 
-namespace utils
-{
+  struct BuildOptions
+  {
+    int threads;
+  };
+  
+  struct CleanOptions
+  {
+    bool all;
+  };
+  
+  class ArgParser
+  {
+  public:
+    ArgParser(void) = default;
+  
+    static int parseArgs(int argc, char* argv[]);
+  };
 
-struct BuildOptions
-{
-  int threads;
-}; // struct BuildOptions
-
-struct CleanOptions
-{
-  bool all;
-}; // struct CleanOptions
-
-class ArgParser
-{
-public:
-  ArgParser(void) = default;
-
-  static int parseArgs(int argc, char* argv[]);
-}; // class ArgParser
-
-} // namespace utils
-
-} // namespace cli
+} // namespace cli::utils
 
 #endif // !ARG_PARSER_HPP
+
