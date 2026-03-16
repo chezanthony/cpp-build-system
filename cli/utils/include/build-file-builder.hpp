@@ -1,6 +1,7 @@
 #ifndef BUILDFILEBUILDER_HPP
 #define BUILDFILEBUILDER_HPP
 
+#include <optional>
 #include <sstream>
 #include <string>
 #include <string_view>
@@ -14,10 +15,13 @@ namespace cli::utils
   public:
     BuildFileBuilder& writeHeader(std::string_view header);
     BuildFileBuilder& writeKeyValue(std::string_view key, std::string_view value);
+    BuildFileBuilder& writeKeyValueOptional(std::string_view key, std::optional<std::string> value);
+    BuildFileBuilder& writeKeyValuePredicate(std::string_view key, std::string_view value, bool predicate);
     BuildFileBuilder& writeKeyValue(std::string_view key, bool value);
 
     template <typename T>
     BuildFileBuilder& writeKeyValue(std::string_view key, std::vector<T>& value);
+
 
     BuildFileBuilder& newLine(void);
     std::string build(void) &&;

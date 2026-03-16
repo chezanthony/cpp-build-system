@@ -10,9 +10,9 @@ namespace cli::commands
 
   enum class InitType : std::uint8_t
   {
-    Empty,
-    Lib,
-    Bin,
+    empty,
+    lib,
+    bin,
   };
   
   struct InitCommandOptions

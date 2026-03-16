@@ -27,6 +27,7 @@ target_link_libraries(cbs
     cli-commands-base
     cli-commands-build
     cli-commands-init
+    cli-commands-new
     cli-utils
 )
 

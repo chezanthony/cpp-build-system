@@ -1,5 +1,6 @@
 #include <charconv>
 #include <format>
+#include <optional>
 #include <string>
 #include <string_view>
 #include <utility>
@@ -18,6 +19,24 @@ namespace cli::utils
   BuildFileBuilder& BuildFileBuilder::writeKeyValue(std::string_view key, std::string_view value)
   {
     mData << key << " = \"" << value << "\"\n";
+    return *this;
+  }
+
+  BuildFileBuilder& BuildFileBuilder::writeKeyValueOptional(std::string_view key, std::optional<std::string> value)
+  {
+    if (value.has_value())
+  	{
+      mData << key << " = \"" << value.value() << "\"\n";
+    }
+    return *this;
+  }
+
+  BuildFileBuilder& BuildFileBuilder::writeKeyValuePredicate(std::string_view key, std::string_view value, bool predicate)
+  {
+    if (predicate)
+    {
+      mData << key << " = \"" << value << "\"\n";
+    }
     return *this;
   }
 

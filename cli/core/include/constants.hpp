@@ -16,9 +16,19 @@ namespace cli::core::constants
   constexpr std::string_view cppVersionKey = "cppVersion";
   constexpr std::string_view defaultCppVersion = "23";
   constexpr std::string_view subdirectoriesKey = "subdirectories";
+
   constexpr std::string_view libraryHeader = "Library";
-  constexpr std::string_view libraryTypeKey = "libraryType";
   constexpr std::string_view binaryHeader = "Binary";
+  constexpr std::string_view targetNameKey = "name";
+  constexpr std::string_view targetDescriptionKey = "description";
+  constexpr std::string_view libraryTypeKey = "libraryType";
+  constexpr std::string_view interfaceLibraryType = "interface";
+  constexpr std::string_view staticLibraryType = "static";
+  constexpr std::string_view sharedLibraryType = "shared";
+
+  constexpr std::string_view includeDirectory = "include";
+  constexpr std::string_view srcDirectory = "src";
+
 
 } // namespace cli::core::constants
 

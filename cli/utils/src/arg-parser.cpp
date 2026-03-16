@@ -1,4 +1,5 @@
 #include "init-args-parser.hpp"
+#include "new-args-parser.hpp"
 #include "arg-parser.hpp"
 #include <iostream>
 
@@ -13,6 +14,9 @@ namespace cli::utils
 
     cli::commands::InitArgsParser initParser;
     initParser.parseArgs(app);
+
+    cli::commands::NewArgsParser newParser;
+    newParser.parseArgs(app);
   
     CLI11_PARSE(app, argc, argv);
     return 0;

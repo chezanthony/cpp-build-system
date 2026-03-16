@@ -19,6 +19,9 @@ namespace cli::core
     DirectoryExists,
     FailedToCreateDirectory,
     FailedToExecuteCommand,
+
+    // Directory validity
+    InvalidDirectory,
   };
 
   struct ErrorType

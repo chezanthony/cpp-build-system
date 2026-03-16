@@ -19,6 +19,7 @@ namespace cli::utils
   public:
     static ReturnType<void> createFile(const Path& filePath) noexcept;
     static ReturnType<void> createFileAndWrite(const Path& filePath, const std::string& data) noexcept;
+    static ReturnType<void> appendToFile(const Path& filePath, const std::string& data) noexcept;
     static bool fileExists(const Path& filePath) noexcept;
     static ReturnType<void> createDirectory(const Path& directory) noexcept;
     static bool directoryExists(const Path& directory) noexcept;

@@ -12,3 +12,4 @@ target_link_libraries(cli-commands-init
     cli-core
     cli-utils
 )
+

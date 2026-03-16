@@ -24,8 +24,18 @@ namespace cli::commands
       case ErrorCodes::FileExists:
         std::cout << "File exists: ";
         break;
+      case ErrorCodes::FileNotFound:
+        std::cout << "File not found: ";
+        break;
       case ErrorCodes::FailedToCreateFile:
         std::cout << "Failed to create file: ";
+        break;
+      case ErrorCodes::DirectoryExists:
+        std::cout << "Directory exists: ";
+        break;
+      case ErrorCodes::InvalidDirectory:
+        std::cout << "Invalid directory: ";
+        break;
       default:
         std::cout << "Unknown: ";
       }
