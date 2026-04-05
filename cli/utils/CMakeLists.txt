@@ -5,6 +5,7 @@ target_sources(cli-utils
     ${CMAKE_CURRENT_SOURCE_DIR}/src/arg-parser.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/exec-helper.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/files-helper.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/toml-validator.cpp
 )
 
 # target_include_directories(cli-utils
@@ -15,7 +16,7 @@ target_sources(cli-utils
 # )
 
 target_include_directories(cli-utils
-  PRIVATE
+  PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
@@ -29,10 +30,21 @@ target_include_directories(cli-utils
 # 
 # FetchContent_MakeAvailable(CLI11)
 
+include(FetchContent)
+
+FetchContent_Declare(
+  tomlplusplus
+  GIT_REPOSITORY https://github.com/marzer/tomlplusplus.git
+  GIT_TAG        v3.4.0
+)
+FetchContent_MakeAvailable(tomlplusplus)
+
 target_link_libraries(cli-utils
   PUBLIC
     CLI11::CLI11
   PRIVATE
     cli-commands-init
+    cli-commands-new
     cli-core
+    tomlplusplus::tomlplusplus
 )

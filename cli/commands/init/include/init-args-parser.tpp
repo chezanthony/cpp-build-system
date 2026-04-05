@@ -43,7 +43,7 @@ namespace cli::commands
   
     init->callback([this]() {
       InitCommandOptions options{
-        .initType = InitType::Empty,
+        .initType = InitType::empty,
         .projectName = this->mProjectName,
         .projectDescription = std::nullopt,
         .targetName = this->mProjectName,
@@ -56,13 +56,12 @@ namespace cli::commands
   
       if (this->mIsLib)
       {
-        options.initType = InitType::Lib;
+        options.initType = InitType::lib;
         options.targetName = this->mLibName.empty() ? this->mProjectName : this->mLibName;
       }
-  
-      if (this->mIsBin)
+      else if (this->mIsBin)
       {
-        options.initType = InitType::Bin;
+        options.initType = InitType::bin;
         options.targetName = this->mBinName.empty() ? this->mProjectName : this->mBinName;
       }
   

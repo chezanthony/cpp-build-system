@@ -19,7 +19,6 @@ namespace cli::commands
     ReturnType<void> executeImpl(const InitCommandOptions& options);
 
   private:
-    void handleBuildFileExists(void) const noexcept;
     ReturnType<void> createBuildFile(const InitCommandOptions& options) const noexcept;
     ReturnType<void> createBuildFileLegacy(const InitCommandOptions& options) const noexcept;
     ReturnType<void> executeCommandLegacy(const InitCommandOptions& options) const noexcept;

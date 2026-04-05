@@ -72,11 +72,10 @@ namespace cli::commands
       .newLine();
     
     const std::string buildFileString { std::move(fileBuilder).build() };
-
     return cli::utils::FilesHelper::createFileAndWrite(buildFilePath, buildFileString);
   }
 
-  /// Not woried about how messy this is. This will be removed in phase 2.
+  /// Not worried about how messy this is. This will be removed in phase 2.
   /// @todo: Remove in phase 2.
   ReturnType<void> Init::createBuildFileLegacy(const InitCommandOptions& options) const noexcept
   {

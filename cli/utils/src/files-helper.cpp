@@ -50,6 +50,18 @@ namespace cli::utils
     return {};
   }
 
+  ReturnType<void> FilesHelper::appendToFile(const Path& filePath, const std::string& data) noexcept
+  {
+    std::ofstream file(filePath, std::ios::app);
+    if (!file)
+    {
+      return std::unexpected(ErrorType{ ErrorCodes::FailedToWriteFile, "" });
+    }
+
+    file << data;
+    return {};
+  }
+
   bool FilesHelper::fileExists(const Path& filePath) noexcept
   {
     return (std::filesystem::exists(filePath) && std::filesystem::is_regular_file(filePath));
@@ -72,7 +84,7 @@ namespace cli::utils
 
   bool FilesHelper::directoryExists(const Path& directory) noexcept
   {
-    return std::filesystem::exists(directory);
+    return std::filesystem::is_directory(directory);
   }
 
   Path FilesHelper::current_path(void) noexcept
@@ -80,3 +92,4 @@ namespace cli::utils
     return std::filesystem::current_path();
   }
 } // namespace cli::utils
+

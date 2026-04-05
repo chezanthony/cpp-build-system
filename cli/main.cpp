@@ -1,11 +1,21 @@
-#include <iostream>
-#include "utils/include/arg-parser.hpp"
+#include "init-args-parser.hpp"
+#include "new-args-parser.hpp"
+#include <CLI/CLI.hpp>
 
 int main(int argc, char* argv[])
 {
-  std::cout << "main passing to arg parser\n";
+  CLI::App app{"cpp build system"};
 
-  const int parseResult = cli::utils::ArgParser::parseArgs(argc, argv);
+  bool verbose = false;
+  app.add_flag("-v,--verbose", verbose, "Verbose Output");
+
+  cli::commands::InitArgsParser initParser;
+  initParser.parseArgs(app);
+
+  cli::commands::NewArgsParser newParser;
+  newParser.parseArgs(app);
+  
+  CLI11_PARSE(app, argc, argv);
 
   return 0;
 }
