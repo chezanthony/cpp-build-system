@@ -9,4 +9,3 @@ target_link_libraries(cli-commands-new
   INTERFACE
     cli-utils
 )
-

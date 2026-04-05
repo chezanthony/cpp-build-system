@@ -15,9 +15,14 @@ namespace cli::commands
     shared,
   };
 
-  struct NewCommandOptions
+  struct NewBinCommandOptions
   {
-    bool isBin; 
+    std::string targetName;
+    std::optional<std::string> targetDescription;
+  };
+
+  struct NewLibCommandOptions
+  {
     std::string targetName;
     std::optional<std::string> targetDescription;
     LibType libType;

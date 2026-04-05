@@ -29,14 +29,16 @@ namespace cli::commands
       return std::unexpected(ErrorType{ ErrorCodes::InvalidDirectory, "Directory is not a project." });
     }
 
-    const std::string targetDirectory{ cli::utils::StringNormalizer::normalizeDirectory(options.targetName) };
+    const std::filesystem::path cwd = std::filesystem::current_path();
+    const std::filesystem::path targetDirectory = cwd / cli::utils::StringNormalizer::normalizeDirectory(options.targetName);
 
-    auto result = createDirectories(options);
+    auto result = createDirectories(options, targetDirectory);
     if(!result)
     {
       return result;
     }
-  
+
+    /// @todo: extract binary and library into their own class.
     result = createBuildFile(options, targetDirectory);
     if (!result)
     {
@@ -51,7 +53,7 @@ namespace cli::commands
       return result;
     }
 
-    result = updateBuildFileLegacy(targetDirectory);
+    result = updateBuildFileLegacy(options, cwd, targetDirectory);
     if (!result)
     {
       result.error().message = "Error updating cmake file.";
@@ -64,10 +66,9 @@ namespace cli::commands
   /// This is intentionally written in an imperative way as I find it easier to trace.
   /// This could be moved either to the << operator of the option type or a formatter specialization
   /// depending on whether I decidde to change build-file-builder to use std::formatter or not.
-  ReturnType<void> New::createBuildFile(const NewCommandOptions& options, const std::string& targetDirectory) const noexcept
+  ReturnType<void> New::createBuildFile(const NewCommandOptions& options, const std::filesystem::path& targetDirectory) const noexcept
   {
-    const std::filesystem::path cwd = std::filesystem::current_path();
-    const std::filesystem::path buildFilePath = cwd / targetDirectory / constants::buildFileName;
+    const std::filesystem::path buildFilePath = targetDirectory / constants::buildFileName;
     const std::unordered_map<LibType, std::string_view> libTypeToString{
       {LibType::interface, constants::interfaceLibraryType},
       {LibType::staticLib, constants::staticLibraryType},
@@ -90,10 +91,9 @@ namespace cli::commands
 
   /// Not worried about how messy this is. This will be removed in phase 2.
   /// @todo: Remove in phase 2.
-  ReturnType<void> New::createBuildFileLegacy(const NewCommandOptions& options, const std::string& targetDirectory) const noexcept
+  ReturnType<void> New::createBuildFileLegacy(const NewCommandOptions& options, const std::filesystem::path& targetDirectory) const noexcept
   {
-    const std::filesystem::path cwd = std::filesystem::current_path();
-    const std::filesystem::path cmakeFilePath = cwd / targetDirectory / constants::cmakeFileName;
+    const std::filesystem::path cmakeFilePath = targetDirectory / constants::cmakeFileName;
 
     const std::unordered_map<LibType, std::string> libTypeToString{{
       {LibType::interface, "INTERFACE"},
@@ -101,26 +101,38 @@ namespace cli::commands
       {LibType::shared, "SHARED"},
     }};
     const std::string libTypeString{ libTypeToString.at(options.libType) };
+    std::string scopeString{ "PUBLIC" };
+    if (!options.isBin && LibType::interface == options.libType)
+    {
+      scopeString = "INTERFACE";
+    }
 
-    std::stringstream theStream;
-    theStream
-      << "add_library(" << options.targetName << " " << libTypeString << ")\n"
-      << "\n\n"
-      << "target_include_directories(" << options.targetName << "\n"
-      << "\t" << libTypeString << "\n"
-      << "\t\t${CMAKE_CURRENT_SOURCE_DIR}/include\n"
-      << ")";
+    std::string data;
+    if (options.isBin)
+    {
+      data += "add_executable(" + options.targetName + ")\n";
+    }
+    else
+    {
+      data += "add_library(" + options.targetName +  " " + libTypeString + ")\n";
+    }
 
-    return cli::utils::FilesHelper::createFileAndWrite(cmakeFilePath, theStream.str());
+    data += "\n";
+    data += "target_include_directories(" + options.targetName + "\n";
+    data += "\t" + scopeString + "\n";
+    data += "\t\t${CMAKE_CURRENT_SOURCE_DIR}/include\n";
+    data += ")";
+
+    return cli::utils::FilesHelper::createFileAndWrite(cmakeFilePath, data);
   }
 
   /// @todo: Remove in phase 2.
-  ReturnType<void> New::updateBuildFileLegacy(const std::string& targetDirectory) const noexcept
+  ReturnType<void> New::updateBuildFileLegacy(const NewCommandOptions& options, const std::filesystem::path& cwd, const std::filesystem::path& targetDirectory) const noexcept
   {
-    const std::filesystem::path cwd = std::filesystem::current_path();
     const std::filesystem::path cmakeFilePath = cwd / constants::cmakeFileName;
+    const std::string data{ "add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/" + targetDirectory.filename().string() + ")\n\n" };
 
-    return cli::utils::FilesHelper::appendToFile(cmakeFilePath, "add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/" + targetDirectory + ")\n\n");
+    return cli::utils::FilesHelper::appendToFile(cmakeFilePath, data);
   }
 
   ReturnType<bool> New::isDirectoryValid() const noexcept
@@ -131,9 +143,8 @@ namespace cli::commands
     return cli::utils::TomlValidator::isProject(tomlFilePath);
   }
 
-  ReturnType<void> New::createDirectories(const NewCommandOptions& options) const noexcept
+  ReturnType<void> New::createDirectories(const NewCommandOptions& options, const std::filesystem::path& targetDirectory) const noexcept
   {
-    const std::filesystem::path targetDirectory{ cli::utils::StringNormalizer::normalizeDirectory(options.targetName) };
     auto result = cli::utils::FilesHelper::createDirectory(targetDirectory.string());
     if(!result)
     {
@@ -149,7 +160,7 @@ namespace cli::commands
       return result;
     }
   
-    if(LibType::interface == options.libType)
+    if(!options.isBin && LibType::interface == options.libType)
     {
       return result;
     }

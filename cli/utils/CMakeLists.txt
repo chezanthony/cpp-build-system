@@ -5,7 +5,6 @@ target_sources(cli-utils
     ${CMAKE_CURRENT_SOURCE_DIR}/src/arg-parser.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/exec-helper.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/files-helper.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/string-normalizer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/toml-validator.cpp
 )
 

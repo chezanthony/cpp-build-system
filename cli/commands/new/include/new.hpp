@@ -4,6 +4,7 @@
 #include "base.hpp"
 #include "new-types.hpp"
 #include "types.hpp"
+#include <filesystem>
 
 namespace cli::commands
 {
@@ -20,10 +21,10 @@ namespace cli::commands
 
   private:
     ReturnType<bool> isDirectoryValid() const noexcept;
-    ReturnType<void> createDirectories(const NewCommandOptions& options) const noexcept;
-    ReturnType<void> createBuildFile(const NewCommandOptions& options, const std::string& targetDirectory) const noexcept;
-    ReturnType<void> createBuildFileLegacy(const NewCommandOptions& options, const std::string& targetDirectory) const noexcept;
-    ReturnType<void> updateBuildFileLegacy(const std::string& targetDirectory) const noexcept;
+    ReturnType<void> createDirectories(const NewCommandOptions& options, const std::filesystem::path& targetDirectory) const noexcept;
+    ReturnType<void> createBuildFile(const NewCommandOptions& options, const std::filesystem::path& targetDirectory) const noexcept;
+    ReturnType<void> createBuildFileLegacy(const NewCommandOptions& options, const std::filesystem::path& targetDirectory) const noexcept;
+    ReturnType<void> updateBuildFileLegacy(const NewCommandOptions& options, const std::filesystem::path& cwd, const std::filesystem::path& targetDirectory) const noexcept;
     ReturnType<void> executeCommandLegacy(const NewCommandOptions& options) const noexcept;
   };
 

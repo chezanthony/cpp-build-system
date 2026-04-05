@@ -11,11 +11,10 @@ namespace cli::commands
   class NewArgsParser : public BaseArgsParser<NewArgsParser>
   {
   public:
+    NewArgsParser();
     void parseArgsImpl(CLI::App& app);
 
   private:
-    bool mIsBin;
-    bool mIsLib;
     std::string mTargetName;
     std::string mTargetDescription;
     bool mIsInterface;
@@ -28,4 +27,3 @@ namespace cli::commands
 #include "new-args-parser.tpp"
 
 #endif // NEW_ARGS_PARSER_HPP
-

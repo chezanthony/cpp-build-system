@@ -1,75 +1,76 @@
 #ifndef NEW_ARGS_PARSER_TPP
 #define NEW_ARGS_PARSER_TPP
 
-#include "new.hpp"
+#include "new-binary.hpp"
+#include "new-library.hpp"
 #include "new-types.hpp"
 #include <CLI/CLI.hpp>
 #include <optional>
 
-
 namespace cli::commands
 {
-  
+
+  NewArgsParser::NewArgsParser() : 
+    mIsInterface{ false }, 
+    mIsStatic{ false },
+    mIsShared{ false }
+  {
+  }
+
   void NewArgsParser::parseArgsImpl(CLI::App& app)
   {
     auto newSubcommand = app.add_subcommand("new", "Create new target: binary or library");
+    newSubcommand->require_subcommand(1);
 
-    this->mIsBin = false;
-    this->mIsLib = false;
-    this->mIsInterface = false;
-    this->mIsStatic = false;
-    this->mIsShared = false;
+    auto binSubcommand = newSubcommand->add_subcommand("bin", "Create binary target");
+    auto libSubcommand = newSubcommand->add_subcommand("lib", "Create library target");
 
-    auto type = newSubcommand->add_option_group("Target type");
-    type->add_flag("-b,--bin", this->mIsBin, "Binary target");
-    type->add_flag("-l,--lib", this->mIsLib, "Library target");
-    type->require_option(1);
-    
-    newSubcommand->add_option("name", this->mTargetName, "Target name")
+    binSubcommand->add_option("name", this->mTargetName, "Target name")
                  ->required()
                  ->expected(1);
+    binSubcommand->add_option("-d,--description", this->mTargetDescription, "Target description")
+                 ->expected(1);
 
-    newSubcommand->add_option("-d,--description", this->mTargetDescription, "Target description")
-              ->expected(1);
+    libSubcommand->add_option("name", this->mTargetName, "Target name")
+                 ->required()
+                 ->expected(1);
+    libSubcommand->add_option("-d,--description", this->mTargetDescription, "Target description")
+                 ->expected(1);
 
-    auto flagLib = type->get_option("-l");
-    auto libType = newSubcommand->add_option_group("Library type");
-    libType->add_flag("-i,--interface", this->mIsInterface, "Interface library")
-           ->needs(flagLib);
-    libType->add_flag("-s,--static", this->mIsStatic, "Static library")
-           ->needs(flagLib);
-    libType->add_flag("-S,--shared", this->mIsShared, "Shared library")
-           ->needs(flagLib);
-    libType->require_option(0,1);
+    auto libTypeGroup = libSubcommand->add_option_group("Library type");
+    libTypeGroup->add_flag("-i,--interface", this->mIsInterface, "Interface library");
+    libTypeGroup->add_flag("-s,--static", this->mIsStatic, "Static library");
+    libTypeGroup->add_flag("-S,--shared", this->mIsShared, "Shared library");
+    libTypeGroup->require_option(0, 1);
 
-    newSubcommand->callback([this]() {
-      NewCommandOptions options{
-        .isBin = this->mIsBin,
+    binSubcommand->callback([this]() {
+      NewBinCommandOptions options{
         .targetName = this->mTargetName,
-        .targetDescription = std::nullopt,
-        .libType = LibType::interface,
+        .targetDescription = this->mTargetDescription.empty() ? std::nullopt : std::optional{ this->mTargetDescription },
       };
+      NewBinary{}.execute(options);
+    });
 
-      if (!this->mTargetDescription.empty())
-      {
-        options.targetDescription = this->mTargetDescription;
-      }
-
+    libSubcommand->callback([this]() {
+      LibType libType = LibType::interface;
       if (this->mIsStatic)
       {
-        options.libType = LibType::staticLib;
+        libType = LibType::staticLib;
       }
       else if (this->mIsShared)
       {
-        options.libType = LibType::shared;
+        libType = LibType::shared;
       }
 
-      New newCommand;
-      newCommand.execute(options);
+      NewLibCommandOptions options{
+        .targetName = this->mTargetName,
+        .targetDescription = this->mTargetDescription.empty() ? std::nullopt : std::optional{ this->mTargetDescription },
+        .libType = libType,
+      };
+      NewLibrary{}.execute(options);
     });
   }
 
 } // namespace cli::commands
 
 #endif // NEW_ARGS_PARSER_TPP
-
