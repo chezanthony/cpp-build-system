@@ -29,7 +29,7 @@ namespace cli::core::constants
   constexpr std::string_view includeDirectory = "include";
   constexpr std::string_view srcDirectory = "src";
 
-
+  constexpr std::string_view placeHolderSrcFileName = "placeholder.cpp";
 } // namespace cli::core::constants
 
 #endif // !CONSTANTS_HPP
