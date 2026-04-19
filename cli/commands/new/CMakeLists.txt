@@ -1,11 +1,17 @@
-add_library(cli-commands-new INTERFACE)
+add_library(cli-commands-new STATIC)
+
+target_sources(cli-commands-new
+  PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/new-utils.cpp
+)
 
 target_include_directories(cli-commands-new
-  INTERFACE
+  PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 target_link_libraries(cli-commands-new
-  INTERFACE
+  PUBLIC
     cli-utils
+    cli-core
 )

@@ -41,6 +41,13 @@ namespace cli::commands
       return result;
     }
 
+    result = NewUtils::createPlaceholderFile(targetDirectory, true);
+    if (!result)
+    {
+      result.error().message = "Error creating place holder file.";
+      return result;
+    }
+
     result = createBuildFile(options, targetDirectory);
     if (!result)
     {
@@ -91,7 +98,9 @@ namespace cli::commands
     data += "target_include_directories(" + options.targetName + "\n";
     data += "\tPUBLIC\n";
     data += "\t\t${CMAKE_CURRENT_SOURCE_DIR}/include\n";
-    data += ")\n";
+    data += ")\n\n";
+
+    data += NewUtils::buildSrcSegmentLegacy(options.targetName);
 
     return cli::utils::FilesHelper::createFileAndWrite(cmakeFilePath, data);
   }

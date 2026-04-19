@@ -43,6 +43,12 @@ namespace cli::commands
       {
         return result;
       }
+
+      result = NewUtils::createPlaceholderFile(targetDirectory, false);
+      if (!result)
+      {
+        return result;
+      }
     }
 
     result = createBuildFile(options, targetDirectory);
@@ -107,7 +113,12 @@ namespace cli::commands
     data += "target_include_directories(" + options.targetName + "\n";
     data += "\t" + scopeString + "\n";
     data += "\t\t${CMAKE_CURRENT_SOURCE_DIR}/include\n";
-    data += ")\n";
+    data += ")\n\n";
+
+    if (LibType::interface != options.libType)
+    {
+      data += NewUtils::buildSrcSegmentLegacy(options.targetName);
+    }
 
     return cli::utils::FilesHelper::createFileAndWrite(cmakeFilePath, data);
   }
